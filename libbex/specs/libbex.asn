@@ -19,11 +19,14 @@ BEGIN
   libbex-name           LibbexName,
   entity                Entity,
   maintainer            Maintainer,
+  description           Description,
   packages              Packages,
   libbex-references     LibbexReferences,
   signature-definition  SignatureDefinition OPTIONAL
   }
   
+  Description ::= UTF8String(SIZE(0..1000))
+
   ProtocolVersion ::= SEQUENCE{
   version Version,
   ecosystem Ecosystem
