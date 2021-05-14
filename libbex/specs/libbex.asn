@@ -1,0 +1,109 @@
+LibbexModule1 DEFINITIONS AUTOMATIC TAGS::=
+BEGIN
+  Libbex ::= CHOICE{
+     signed-libbex SignedLibbex,
+     unsigned-libbex UnsignedLibbex,
+     unpresentable-libbex NULL
+  }
+
+  SignedLibbex ::= SEQUENCE {
+    unsigned-libbex UnsignedLibbex,
+    signature-value SignatureValue
+  }
+
+  SignatureValue ::= UTF8String(SIZE(0..1000))
+
+  UnsignedLibbex ::= SEQUENCE {
+  protocol-version      ProtocolVersion,
+  libbex-version        LibbexVersion,
+  libbex-name           LibbexName,
+  entity                Entity,
+  maintainer            Maintainer,
+  packages              Packages,
+  libbex-references     LibbexReferences,
+  signature-definition  SignatureDefinition OPTIONAL
+  }
+  
+  ProtocolVersion ::= SEQUENCE{
+  version Version,
+  ecosystem Ecosystem
+  }
+
+  Ecosystem ::= VisibleString(SIZE(3..64))
+  
+  LibbexVersion ::= SEQUENCE {
+  version Version,
+  version-attribute VersionAttribute
+  }
+  
+  Version ::= VisibleString(PATTERN "\d#(1,6)\.\d#(1,6)\.\d#(1,6)")
+   
+  VersionAttribute ::= ENUMERATED {
+  compatibility,
+  security,
+  free
+  }
+
+  LibbexName ::= UTF8String(SIZE(1..250))
+
+  Entity ::= SEQUENCE {
+  name Name,
+  webpresence Url OPTIONAL,
+  country CountryCode OPTIONAL,
+  ...
+  }
+
+  Name ::= UTF8String(SIZE(1..100) )
+  
+  Url ::= UTF8String(SIZE(1..500) )
+
+  CountryCode ::= VisibleString(SIZE(3))
+
+  Maintainer ::= SEQUENCE {
+  email   Email,
+  name Name OPTIONAL, 
+  ...
+  }
+  
+  Email ::= UTF8String(SIZE(1..500) )
+
+  
+  Packages ::= SEQUENCE (SIZE(0..1000)) OF Package
+
+  Package ::= SEQUENCE {
+    package-identifier PackageIdentifier,
+    package-fingerprint PackageFingerprint OPTIONAL
+  }
+
+  PackageIdentifier ::= CHOICE {
+    package-extended-name PackageExtendedName,
+    ...
+  }
+  
+  PackageExtendedName ::= UTF8String(SIZE(0..1000))
+  
+  PackageFingerprint ::= CHOICE {
+  string-fingerprint StringFingerprint,
+  ...
+  }
+
+  StringFingerprint ::= SEQUENCE {
+  fingerprint-method-name FingerprintMethodName,
+  fingerprint-string FingerprintString
+  }
+
+  FingerprintMethodName ::= VisibleString(SIZE(1..50))
+
+  FingerprintString ::= UTF8String(SIZE(0..1000))
+
+  LibbexReferences ::= SEQUENCE (SIZE(0..250)) OF LibbexExtendedName
+
+  LibbexExtendedName ::= UTF8String(SIZE(0..500))
+
+  SignatureDefinition ::= SEQUENCE {
+    signature-method-name SignatureMethodName, 
+    signature-key-name  SignatureKeyName
+  }
+  SignatureMethodName ::= VisibleString(SIZE(1..50))
+  SignatureKeyName ::= VisibleString(SIZE(1..50))
+END
